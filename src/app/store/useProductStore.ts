@@ -39,59 +39,6 @@ interface ProductStore {
 // Black-only product imagery — local assets (see public/images/)
 const initialProducts: Product[] = [
   {
-    id: '1',
-    name: 'Apex Chronograph',
-    slug: 'apex-chronograph',
-    price: 299,
-    originalPrice: 399,
-    rating: 4.8,
-    reviewCount: 127,
-    description: 'Experience timeless elegance with the Apex Chronograph. Meticulously crafted with premium materials, featuring a sapphire crystal face, Swiss movement, and Italian leather strap. This timepiece seamlessly blends classic design with modern sophistication.',
-    category: 'Watches',
-    images: [
-      '/images/black-watch-1.png',
-      '/images/black-watch-2.png',
-      '/images/black-watch-3.png',
-      '/images/black-watch-1.png',
-    ],
-    sizes: ['36mm', '40mm', '42mm', '44mm'],
-    features: [
-      'Swiss automatic movement with 48-hour power reserve',
-      'Scratch-resistant sapphire crystal with anti-reflective coating',
-      'Water resistant up to 100 meters (10 ATM)',
-      'Premium Italian leather strap with quick-release spring bars',
-      'Luminous hands and markers for low-light visibility',
-      'Date display window at 3 o\'clock position',
-    ],
-    inStock: true,
-    badge: 'sale',
-  },
-  {
-    id: '2',
-    name: 'Meridian Minimalist',
-    slug: 'meridian-minimalist',
-    price: 189,
-    rating: 4.6,
-    reviewCount: 89,
-    description: 'The Meridian Minimalist represents the perfect union of form and function. With its ultra-slim profile, clean dial design, and precision quartz movement, this watch is the ideal companion for the modern professional.',
-    category: 'Watches',
-    images: [
-      '/images/black-watch-2.png',
-      '/images/black-watch-3.png',
-    ],
-    sizes: ['38mm', '40mm', '42mm'],
-    features: [
-      'Japanese quartz movement for precision accuracy',
-      'Ultra-slim 7mm case profile',
-      'Stainless steel mesh bracelet',
-      'Minimalist dial with no date window',
-      'Water resistant to 50 meters',
-      'Scratch-resistant mineral crystal',
-    ],
-    inStock: true,
-    badge: 'bestseller',
-  },
-  {
     id: '3',
     name: 'Luxe Leather Tote',
     slug: 'luxe-leather-tote',
@@ -216,36 +163,11 @@ const initialProducts: Product[] = [
     inStock: true,
     badge: 'new',
   },
-  {
-    id: '8',
-    name: 'Sport Chronograph Elite',
-    slug: 'sport-chronograph-elite',
-    price: 549,
-    rating: 4.9,
-    reviewCount: 245,
-    description: 'Built for performance and precision. The Sport Chronograph Elite features a robust titanium case, ceramic bezel, and advanced chronograph functions for the active lifestyle.',
-    category: 'Watches',
-    images: [
-      '/images/black-watch-1.png',
-      '/images/black-watch-3.png',
-    ],
-    sizes: ['42mm', '44mm', '46mm'],
-    features: [
-      'Titanium case with ceramic bezel',
-      'Swiss automatic chronograph movement',
-      'Water resistant to 200 meters',
-      'Sapphire crystal front and back',
-      'Rubber sport strap with deployment clasp',
-      'Luminous hands and hour markers',
-    ],
-    inStock: true,
-    badge: 'new',
-  },
 ];
 
 export const useProductStore = create<ProductStore>((set, get) => ({
   products: initialProducts,
-  categories: ['All', 'Men', 'Kids', 'Gadgets', 'Watches', 'Bags', 'Accessories'],
+  categories: ['All', 'Men', 'Kids', 'Gadgets', 'Bags', 'Accessories'],
   selectedCategory: null,
   searchQuery: '',
   featuredBannerProductId: null,
@@ -292,9 +214,9 @@ export const useProductStore = create<ProductStore>((set, get) => ({
     // Filter by category (Men, Kids, Gadgets map to product categories)
     if (selectedCategory && selectedCategory !== 'All') {
       const bannerCategoryMap: Record<string, string[]> = {
-        Men: ['Watches', 'Bags'],
+        Men: ['Bags'],
         Kids: ['Accessories'],
-        Gadgets: ['Watches', 'Accessories'],
+        Gadgets: ['Accessories'],
       };
       const mappedCategories = bannerCategoryMap[selectedCategory];
       if (mappedCategories) {

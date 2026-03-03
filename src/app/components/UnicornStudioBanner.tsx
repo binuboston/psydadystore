@@ -8,7 +8,7 @@ import { useBannerStore } from '../store/useBannerStore';
 /** Unicorn Studio project ID for banner motion. Embed: https://framer.com/m/UnicornStudioEmbed-wWy9.js */
 const UNICORN_PROJECT_ID = '4qnDP5XucTA8EjxnCers';
 const PARALLAX_FACTOR = 0.4;
-const SCROLL_THRESHOLD = 120;
+const SCROLL_THRESHOLD = 120; // header / logo transition (unchanged)
 
 const LOGO = 'psyDady';
 
@@ -16,7 +16,11 @@ export function UnicornStudioBanner() {
   const heroContent = useBannerStore((s) => s.heroContent);
   const { scrollY } = useScroll();
   const parallaxY = useTransform(scrollY, (v) => v * PARALLAX_FACTOR);
-  const bannerSearchOpacity = useTransform(scrollY, [0, SCROLL_THRESHOLD], [1, 0]);
+  // Fade out title/search when banner is fully scrolled (banner is 80vh)
+  const bannerSearchOpacity = useTransform(scrollY, (v) => {
+    const hideBy = typeof window !== 'undefined' ? window.innerHeight * 0.8 : 600;
+    return Math.max(0, 1 - v / hideBy);
+  });
 
   const [logoInBanner, setLogoInBanner] = useState(true);
   useMotionValueEvent(scrollY, 'change', (v) => setLogoInBanner(v <= SCROLL_THRESHOLD));
@@ -43,7 +47,7 @@ export function UnicornStudioBanner() {
         />
       </motion.div>
 
-      <div className="relative z-10 flex min-h-[400px] h-[80vh] w-full flex-col items-center justify-center p-6 md:p-10">
+      <div className="relative z-10 flex min-h-[400px] h-[70vh] w-full flex-col items-center justify-center p-6 md:p-10">
         {/* Banner logo - participates in shared layout transition to header */}
         {logoInBanner && (
           <Link

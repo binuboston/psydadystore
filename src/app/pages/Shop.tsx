@@ -22,21 +22,7 @@ export function Shop() {
   return (
     <>
       <UnicornStudioBanner />
-      <div className="max-w-7xl mx-auto px-6 pt-28 pb-16">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="mb-6"
-        >
-          <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-foreground mb-2">
-            Premium Collection
-          </h1>
-          <p className="text-base text-muted-foreground max-w-2xl">
-            Discover our curated selection of timeless pieces crafted with exceptional attention to detail
-          </p>
-        </motion.div>
-
+      <div className="max-w-7xl mx-auto px-6 pt-6 pb-16">
         <div className="mb-8">
           <CategoryFilter />
         </div>
