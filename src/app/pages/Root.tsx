@@ -1,4 +1,4 @@
-import { Outlet, useLocation } from 'react-router';
+import { Outlet, useLocation, ScrollRestoration } from 'react-router';
 import { LayoutGroup } from 'motion/react';
 import { Navigation } from '../components/Navigation';
 import { ScrollToTop } from '../components/ScrollToTop';
@@ -10,6 +10,9 @@ export function Root() {
 
   return (
     <LayoutGroup>
+    <ScrollRestoration
+      getKey={(loc) => loc.pathname}
+    />
     <div className="min-h-screen bg-gradient-to-br from-white via-muted/30 to-[#f5e0e8]/20">
       {!isLanding && (
         <>

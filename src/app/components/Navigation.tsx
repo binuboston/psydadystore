@@ -1,28 +1,63 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ShoppingBag, User, Heart } from 'lucide-react';
-import { motion, useScroll, useTransform, useMotionValueEvent } from 'motion/react';
+import { motion, useScroll, useMotionValueEvent } from 'motion/react';
 import { Link, useNavigate, useLocation } from 'react-router';
 import { useCartStore } from '../store/useCartStore';
 import { HeaderSearch } from './HeaderSearch';
 
 const SCROLL_THRESHOLD = 120;
 const NAV_HEIGHT_PX = 64;
+const SCROLL_UP_SHOW_THRESHOLD = 60;
 const LOGO = 'psyDady';
+
+const isBannerPage = (path: string) => path === '/shop';
 
 export function Navigation() {
   const cartCount = useCartStore((s) => s.getCartCount());
   const navigate = useNavigate();
   const location = useLocation();
   const { scrollY } = useScroll();
-  const navY = useTransform(scrollY, [0, SCROLL_THRESHOLD], [-NAV_HEIGHT_PX, 0]);
-  const [logoInHeader, setLogoInHeader] = useState(location.pathname !== '/shop');
-  useMotionValueEvent(scrollY, 'change', (v) =>
-    setLogoInHeader(location.pathname !== '/shop' || v > SCROLL_THRESHOLD)
-  );
+  const lastScrollY = useRef(0);
+  const [logoInHeader, setLogoInHeader] = useState(!isBannerPage(location.pathname));
+  const [headerHidden, setHeaderHidden] = useState(false);
+  const isBanner = isBannerPage(location.pathname);
+  const [navY, setNavY] = useState(() => (isBanner ? -NAV_HEIGHT_PX : 0));
+
+  useEffect(() => {
+    if (!isBanner) setNavY(0);
+    else {
+      const v = scrollY.get();
+      if (v <= SCROLL_THRESHOLD) setNavY(-NAV_HEIGHT_PX + (v / SCROLL_THRESHOLD) * NAV_HEIGHT_PX);
+      else setNavY(0);
+    }
+    lastScrollY.current = scrollY.get();
+  }, [location.pathname, isBanner]);
+
+  useMotionValueEvent(scrollY, 'change', (v) => {
+    setLogoInHeader(!isBannerPage(location.pathname) || v > SCROLL_THRESHOLD);
+    if (!isBanner) {
+      setNavY(0);
+      return;
+    }
+    const prev = lastScrollY.current;
+    lastScrollY.current = v;
+    if (v <= SCROLL_THRESHOLD) {
+      setHeaderHidden(false);
+      setNavY(-NAV_HEIGHT_PX + (v / SCROLL_THRESHOLD) * NAV_HEIGHT_PX);
+      return;
+    }
+    const nextHidden = v > prev ? true : prev - v >= SCROLL_UP_SHOW_THRESHOLD ? false : headerHidden;
+    setHeaderHidden(nextHidden);
+    setNavY(nextHidden ? -NAV_HEIGHT_PX : 0);
+  });
+
+  const displayY = isBanner ? navY : 0;
 
   return (
     <motion.nav
-      style={{ y: navY }}
+      initial={false}
+      animate={{ y: displayY }}
+      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
       className="fixed top-0 left-0 right-0 z-50 h-[var(--nav-height)] flex items-center bg-white border-b border-[#eaeaea]"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full flex items-center justify-between gap-4">
